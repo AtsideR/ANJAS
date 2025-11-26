@@ -1,0 +1,194 @@
+/* --- CONTAINER UTAMA --- */
+.dashboard-wrapper {
+    width: 100%;
+    max-width: 1400px; /* Batas lebar agar tidak terlalu melar di layar ultrawide */
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+/* --- HERO SECTION --- */
+.hero-card {
+    text-align: center;
+    padding: 40px 20px;
+    margin-bottom: 30px;
+    background: linear-gradient(to bottom right, #ffffff, #f8faff);
+    border: 1px solid #eef2ff;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Tampilan Hero Logo & Text Sejajar di PC (Opsional) */
+@media (min-width: 768px) {
+    .hero-content {
+        flex-direction: row;
+        justify-content: center;
+        text-align: left;
+    }
+}
+
+.hero-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.hero-title {
+    margin: 0;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    background: -webkit-linear-gradient(45deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    margin: 5px 0 10px 0;
+    font-weight: 600;
+    color: #333;
+}
+
+/* --- PROGRESS BAR --- */
+.progress-container {
+    margin-top: 25px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.progress-bar-bg {
+    height: 8px;
+    background: #eef2ff;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #7c3aed);
+    border-radius: 99px;
+}
+
+/* --- GRID SYSTEM (KUNCI TAMPILAN FULL LAYAR) --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Default Mobile: 1 Kolom */
+    gap: 24px;
+}
+
+/* Tampilan Tablet: 2 Kolom */
+@media (min-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr; 
+    }
+    .sidebar-card {
+        grid-column: span 2; /* Sidebar melebar penuh di tablet */
+    }
+}
+
+/* Tampilan PC/Desktop: 3 Kolom (Anjem | Jastip | Sidebar) */
+@media (min-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1.2fr 1.2fr 0.8fr; /* Proporsi kolom */
+        align-items: start;
+    }
+    .sidebar-card {
+        grid-column: span 1; /* Reset sidebar jadi 1 kolom */
+        position: sticky;
+        top: 90px; /* Agar sidebar ikut scroll */
+    }
+}
+
+/* --- CARD ITEMS --- */
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #f3f4f6;
+    height: 100%; /* Agar tinggi kartu seragam */
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.list-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #f9fafb;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.tag-location {
+    background: #e0e7ff;
+    color: #4338ca;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    margin-left: 8px;
+}
+
+.stats-box {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat {
+    flex: 1;
+    background: #f9fafb;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-num {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4f46e5;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* --- UTILITIES --- */
+.badge {
+    font-size: 0.7rem;
+    background: #ecfdf5;
+    color: #059669;
+    padding: 4px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+}
+
+.small-text { font-size: 0.85rem; }
+.mt-4 { margin-top: 16px; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

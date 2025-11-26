@@ -16,8 +16,8 @@ export default defineConfig({
     },
 
     manifest: {
-      name: 'ANJAS',
-      short_name: 'ANJAS',
+      name: 'Project-Anjas',
+      short_name: 'Project-Anjas',
       description: 'antar jemput dan jasa titip',
       theme_color: '#ffffff',
     },
