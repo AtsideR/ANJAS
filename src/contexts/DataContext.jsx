@@ -1,13 +1,13 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react'
 
-// --- 1. CONFIG URL BACKEND (HARDCODE) ---
-// Kita arahkan langsung ke server backend.
-// Note: Biasanya di Vercel endpoint ada di folder /api, jadi kita tambahkan /api di sini.
-const BASE_URL = 'https://api-anjas.vercel.app/api'; 
+// --- 1. SETTING URL BACKEND (HARDCODE) ---
+// Kita arahkan langsung ke domain backend.
+// Jangan gunakan relative path '/' atau '/api' saja.
+const API_BASE = 'https://api-anjas.vercel.app'; 
 
 export const DataContext = createContext({})
 
-// --- HELPER CACHE (Agar data tersimpan sementara di browser) ---
+// --- HELPER CACHE ---
 const ANJEM_KEY = 'anjem_cache_v1'
 const JASTIP_KEY = 'jastip_cache_v1'
 const SITE_KEY = 'site_cache_v1'
@@ -38,7 +38,8 @@ export function DataProvider({ children }) {
     setLoading(prev => ({ ...prev, anjem: true }))
     try {
       // Fetch ke: https://api-anjas.vercel.app/api/anjem
-      const res = await fetch(`${BASE_URL}/anjem`) 
+      const res = await fetch(`${API_BASE}/api/anjem`) 
+      
       if (!res.ok) throw new Error(`Gagal ambil data Anjem (${res.status})`)
       
       const json = await res.json()
@@ -49,7 +50,7 @@ export function DataProvider({ children }) {
         writeCache(ANJEM_KEY, data)
       }
     } catch (e) {
-      console.error(e)
+      console.error("Error GET Anjem:", e)
       setError(e.message)
     } finally {
       setLoading(prev => ({ ...prev, anjem: false }))
@@ -60,7 +61,8 @@ export function DataProvider({ children }) {
     setLoading(prev => ({ ...prev, jastip: true }))
     try {
       // Fetch ke: https://api-anjas.vercel.app/api/jastip
-      const res = await fetch(`${BASE_URL}/jastip`)
+      const res = await fetch(`${API_BASE}/api/jastip`)
+      
       if (!res.ok) throw new Error(`Gagal ambil data Jastip (${res.status})`)
 
       const json = await res.json()
@@ -71,7 +73,7 @@ export function DataProvider({ children }) {
         writeCache(JASTIP_KEY, data)
       }
     } catch (e) {
-      console.error(e)
+      console.error("Error GET Jastip:", e)
       setError(e.message)
     } finally {
       setLoading(prev => ({ ...prev, jastip: false }))
@@ -80,7 +82,7 @@ export function DataProvider({ children }) {
 
   const fetchSite = useCallback(async () => {
     try {
-      const res = await fetch(`${BASE_URL}/site-info`)
+      const res = await fetch(`${API_BASE}/api/site-info`)
       if (res.ok) {
         const s = await res.json()
         if (s) { setSite(s); writeCache(SITE_KEY, s) }
@@ -97,7 +99,7 @@ export function DataProvider({ children }) {
   // --- FUNGSI TAMBAH (POST) ---
   const addAnjem = useCallback(async (payload) => {
     // POST ke: https://api-anjas.vercel.app/api/anjem
-    const res = await fetch(`${BASE_URL}/anjem`, {
+    const res = await fetch(`${API_BASE}/api/anjem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -105,13 +107,13 @@ export function DataProvider({ children }) {
     
     if (!res.ok) {
         const errText = await res.text();
-        throw new Error(errText || "Gagal menambah data");
+        throw new Error(`Gagal POST Anjem: ${res.status} - ${errText}`);
     }
 
     const json = await res.json()
     const resData = json.data || json || {}
     
-    // Update state lokal biar langsung muncul
+    // Update state lokal
     const newItem = { ...payload, id: resData.id || Date.now(), created_at: new Date().toISOString() }
     setAnjem(prev => { 
         const next = [newItem, ...prev]; 
@@ -123,7 +125,7 @@ export function DataProvider({ children }) {
 
   const addJastip = useCallback(async (payload) => {
     // POST ke: https://api-anjas.vercel.app/api/jastip
-    const res = await fetch(`${BASE_URL}/jastip`, {
+    const res = await fetch(`${API_BASE}/api/jastip`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -131,7 +133,7 @@ export function DataProvider({ children }) {
 
     if (!res.ok) {
         const errText = await res.text();
-        throw new Error(errText || "Gagal menambah data");
+        throw new Error(`Gagal POST Jastip: ${res.status} - ${errText}`);
     }
 
     const json = await res.json()
