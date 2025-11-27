@@ -37,7 +37,7 @@ export async function getJastip() {
 }
 
 export async function postAnjem(payload) {
-  return safeFetch(BASE_URL + '/api/anjem', {
+  return safeFetch(BASE_URL + 'api/anjem', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
