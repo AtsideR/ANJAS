@@ -1,11 +1,13 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react'
 
-// 1. PASTIKAN ADA HTTPS://
-const BASE_URL = 'https://api-anjas.vercel.app';
+// --- 1. CONFIG URL BACKEND (HARDCODE) ---
+// Kita arahkan langsung ke server backend.
+// Note: Biasanya di Vercel endpoint ada di folder /api, jadi kita tambahkan /api di sini.
+const BASE_URL = 'https://api-anjas.vercel.app/api'; 
 
 export const DataContext = createContext({})
 
-// ... (Kode cache & helper biarkan sama) ...
+// --- HELPER CACHE (Agar data tersimpan sementara di browser) ---
 const ANJEM_KEY = 'anjem_cache_v1'
 const JASTIP_KEY = 'jastip_cache_v1'
 const SITE_KEY = 'site_cache_v1'
@@ -31,25 +33,23 @@ export function DataProvider({ children }) {
   const [loading, setLoading] = useState({ anjem: false, jastip: false })
   const [error, setError] = useState(null)
 
-  // --- PERBAIKAN FETCH GET ---
+  // --- FUNGSI FETCH (GET) ---
   const fetchAnjem = useCallback(async () => {
     setLoading(prev => ({ ...prev, anjem: true }))
     try {
-      // COBA TAMBAHKAN '/api' JIKA LANGSUNG '/anjem' GAGAL
-      // Kemungkinan endpoint aslinya adalah: https://api-anjas.vercel.app/api/anjem
-      const res = await fetch(`${BASE_URL}/api/anjem`) 
-      
-      if (!res.ok) throw new Error(`Gagal ambil data Anjem: ${res.status}`)
+      // Fetch ke: https://api-anjas.vercel.app/api/anjem
+      const res = await fetch(`${BASE_URL}/anjem`) 
+      if (!res.ok) throw new Error(`Gagal ambil data Anjem (${res.status})`)
       
       const json = await res.json()
       const data = json.data || json
-
+      
       if (Array.isArray(data)) {
         setAnjem(data)
         writeCache(ANJEM_KEY, data)
       }
     } catch (e) {
-      console.error("Error Fetch Anjem:", e)
+      console.error(e)
       setError(e.message)
     } finally {
       setLoading(prev => ({ ...prev, anjem: false }))
@@ -59,10 +59,9 @@ export function DataProvider({ children }) {
   const fetchJastip = useCallback(async () => {
     setLoading(prev => ({ ...prev, jastip: true }))
     try {
-      // COBA TAMBAHKAN '/api' DISINI JUGA
-      const res = await fetch(`${BASE_URL}/api/jastip`)
-      
-      if (!res.ok) throw new Error(`Gagal ambil data Jastip: ${res.status}`)
+      // Fetch ke: https://api-anjas.vercel.app/api/jastip
+      const res = await fetch(`${BASE_URL}/jastip`)
+      if (!res.ok) throw new Error(`Gagal ambil data Jastip (${res.status})`)
 
       const json = await res.json()
       const data = json.data || json
@@ -72,7 +71,7 @@ export function DataProvider({ children }) {
         writeCache(JASTIP_KEY, data)
       }
     } catch (e) {
-      console.error("Error Fetch Jastip:", e)
+      console.error(e)
       setError(e.message)
     } finally {
       setLoading(prev => ({ ...prev, jastip: false }))
@@ -81,7 +80,7 @@ export function DataProvider({ children }) {
 
   const fetchSite = useCallback(async () => {
     try {
-      const res = await fetch(`${BASE_URL}/api/site-info`) // Tambah /api juga
+      const res = await fetch(`${BASE_URL}/site-info`)
       if (res.ok) {
         const s = await res.json()
         if (s) { setSite(s); writeCache(SITE_KEY, s) }
@@ -95,71 +94,56 @@ export function DataProvider({ children }) {
     fetchJastip()
   }, [fetchAnjem, fetchJastip, fetchSite])
 
-  // --- FUNGSI POST (PASTIKAN PAKE /api JUGA JIKA POST BERHASIL DENGAN /api) ---
+  // --- FUNGSI TAMBAH (POST) ---
   const addAnjem = useCallback(async (payload) => {
-    try {
-      // Jika sebelumnya POST berhasil, cek URL mana yang dipakai? 
-      // Kita samakan pakai /api dulu.
-      const res = await fetch(`${BASE_URL}/api/anjem`, {
+    // POST ke: https://api-anjas.vercel.app/api/anjem
+    const res = await fetch(`${BASE_URL}/anjem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      })
-      
-      if (res.ok) {
-        const json = await res.json()
-        const resData = json.data || json || {}
-        
-        const newItem = { 
-            ...payload, 
-            id: resData.id ?? Date.now(), 
-            created_at: resData.created_at ?? new Date().toISOString() 
-        }
-        
-        setAnjem(prev => { 
-            const next = [newItem, ...prev]; 
-            writeCache(ANJEM_KEY, next); 
-            return next 
-        })
-        return newItem
-      }
-    } catch (e) {
-      console.error("Error adding anjem:", e)
-      throw e
+    })
+    
+    if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || "Gagal menambah data");
     }
-    return null
+
+    const json = await res.json()
+    const resData = json.data || json || {}
+    
+    // Update state lokal biar langsung muncul
+    const newItem = { ...payload, id: resData.id || Date.now(), created_at: new Date().toISOString() }
+    setAnjem(prev => { 
+        const next = [newItem, ...prev]; 
+        writeCache(ANJEM_KEY, next); 
+        return next 
+    })
+    return newItem
   }, [])
 
   const addJastip = useCallback(async (payload) => {
-    try {
-      const res = await fetch(`${BASE_URL}/api/jastip`, {
+    // POST ke: https://api-anjas.vercel.app/api/jastip
+    const res = await fetch(`${BASE_URL}/jastip`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      })
+    })
 
-      if (res.ok) {
-        const json = await res.json()
-        const resData = json.data || json || {}
-
-        const newItem = { 
-            ...payload, 
-            id: resData.id ?? Date.now(), 
-            created_at: resData.created_at ?? new Date().toISOString() 
-        }
-
-        setJastip(prev => { 
-            const next = [newItem, ...prev]; 
-            writeCache(JASTIP_KEY, next); 
-            return next 
-        })
-        return newItem
-      }
-    } catch (e) {
-      console.error("Error adding jastip:", e)
-      throw e
+    if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || "Gagal menambah data");
     }
-    return null
+
+    const json = await res.json()
+    const resData = json.data || json || {}
+
+    const newItem = { ...payload, id: resData.id || Date.now(), created_at: new Date().toISOString() }
+    setJastip(prev => { 
+        const next = [newItem, ...prev]; 
+        writeCache(JASTIP_KEY, next); 
+        return next 
+    })
+    return newItem
   }, [])
 
   const value = {
