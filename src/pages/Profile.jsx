@@ -60,7 +60,7 @@ export default function Profile() {
             <h3>Tentang Proyek</h3>
             <p className="muted">
               Proyek ini adalah antarmuka frontend sederhana yang terhubung ke API publik
-              <code> https://api-anjas.vercel.app/</code>. Fitur utama:
+              <code> https://api-anjas.vercel.app</code>. Fitur utama:
             </p>
             <ul style={{ paddingLeft: '20px', color: '#475569' }}>
               <li style={{ marginBottom: 4 }}>Dashboard menampilkan entri terbaru untuk antar jemput dan jasa titip.</li>
