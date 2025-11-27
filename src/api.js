@@ -1,8 +1,5 @@
 // Minimal API helper for Project-Anjas
-
-// 1. Ambil URL dan HAPUS slash di akhir agar aman
-const ENV_URL = import.meta.env.VITE_API_URL || 'https://api-anjas.vercel.app';
-const BASE_URL = ENV_URL.replace(/\/$/, ''); // Hapus '/' di ujung jika ada
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 async function safeFetch(url, opts = {}) {
   const res = await fetch(url, opts)
@@ -21,23 +18,22 @@ async function safeFetch(url, opts = {}) {
 
 export async function getSiteInfo() {
   try {
-    return await safeFetch(BASE_URL + '/api/site-info') // Pastikan pakai /api jika backend butuh
+    return await safeFetch(BASE + '/')
   } catch {
     return { title: 'Project-Anjas', tagline: 'Antar Jemput & Jasa Titip' }
   }
 }
 
 export async function getAnjem() {
-  // BASE_URL sudah bersih, jadi aman ditambah /api/anjem
-  return safeFetch(BASE_URL + '/api/anjem')
+  return safeFetch(BASE + '/api/anjem')
 }
 
 export async function getJastip() {
-  return safeFetch(BASE_URL + '/api/jastip')
+  return safeFetch(BASE + '/api/jastip')
 }
 
 export async function postAnjem(payload) {
-  return safeFetch(BASE_URL + '/api/anjem', {
+  return safeFetch(BASE + '/api/anjem', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -45,7 +41,7 @@ export async function postAnjem(payload) {
 }
 
 export async function postJastip(payload) {
-  return safeFetch(BASE_URL + '/api/jastip', {
+  return safeFetch(BASE + '/api/jastip', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
