@@ -1,9 +1,9 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react'
 
 // --- 1. SETTING URL BACKEND (HARDCODE) ---
-// Kita arahkan langsung ke domain backend.
-// Jangan gunakan relative path '/' atau '/api' saja.
-const API_BASE = 'https://api-anjas.vercel.app'; 
+// Gunakan URL Backend asli.
+// .replace(/\/$/, '') gunanya untuk membuang tanda miring (slash) di akhir jika tidak sengaja tertulis.
+const API_BASE = 'https://api-anjas.vercel.app'.replace(/\/$/, '');
 
 export const DataContext = createContext({})
 
@@ -38,7 +38,7 @@ export function DataProvider({ children }) {
     setLoading(prev => ({ ...prev, anjem: true }))
     try {
       // Fetch ke: https://api-anjas.vercel.app/api/anjem
-      const res = await fetch(`${API_BASE}/api/anjem`) 
+      const res = await fetch(`${API_BASE}/api/anjem`, { mode: 'cors' }) 
       
       if (!res.ok) throw new Error(`Gagal ambil data Anjem (${res.status})`)
       
@@ -61,7 +61,7 @@ export function DataProvider({ children }) {
     setLoading(prev => ({ ...prev, jastip: true }))
     try {
       // Fetch ke: https://api-anjas.vercel.app/api/jastip
-      const res = await fetch(`${API_BASE}/api/jastip`)
+      const res = await fetch(`${API_BASE}/api/jastip`, { mode: 'cors' })
       
       if (!res.ok) throw new Error(`Gagal ambil data Jastip (${res.status})`)
 
@@ -82,7 +82,7 @@ export function DataProvider({ children }) {
 
   const fetchSite = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/site-info`)
+      const res = await fetch(`${API_BASE}/api/site-info`, { mode: 'cors' })
       if (res.ok) {
         const s = await res.json()
         if (s) { setSite(s); writeCache(SITE_KEY, s) }
@@ -102,7 +102,8 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/api/anjem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        mode: 'cors'
     })
     
     if (!res.ok) {
@@ -128,7 +129,8 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/api/jastip`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        mode: 'cors'
     })
 
     if (!res.ok) {
