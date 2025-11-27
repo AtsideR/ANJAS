@@ -1,21 +1,29 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Home, Truck, Package, User, Plus } from "lucide-react";
-import "./Header.css"; // Pastikan path import CSS benar
+import "./Header.css"; 
 
 export default function Header() {
   const navigate = useNavigate();
 
   return (
     <>
-      {/* DESKTOP HEADER (Hanya muncul di Layar Besar) */}
+      {/* DESKTOP HEADER */}
       <header className="desktop-header">
         <div className="site-header-inner">
           <div className="brand">
+            {/* PERUBAHAN DISINI: Ukuran logo diperbesar langsung */}
+            {/* Cari bagian <img> di Header.js dan ganti dengan ini */}
             <img
-              src="https://ppb-mod-5-kel-23.vercel.app/assets/LOGORN-BxI8C0zb.png"
-              alt="logo"
-              className="logo"
+            src="https://ppb-mod-5-kel-23.vercel.app/assets/LOGORN-BxI8C0zb.png"
+            alt="logo"
+            className="logo"
+            style={{ 
+                height: '75px', 
+                width: 'auto',  
+                minWidth: '0px', /* Mencegah logo mengecil */
+                objectFit: 'contain' 
+              }}
             />
             <div className="brand-text">
               <div className="brand-title">ANJAS</div>
@@ -46,7 +54,7 @@ export default function Header() {
         </div>
       </header>
 
-      {/* MOBILE BOTTOM NAV (Hanya muncul di HP) */}
+      {/* MOBILE BOTTOM NAV */}
       <nav className="mobile-bottom-nav">
         <NavLink to="/" className={({ isActive }) => (isActive ? "mobile-item active" : "mobile-item")}>
           <Home size={22} />
@@ -69,7 +77,7 @@ export default function Header() {
         </NavLink>
       </nav>
 
-      {/* FLOAT BUTTON MOBILE (Hanya muncul di HP) */}
+      {/* FLOAT BUTTON MOBILE */}
       <button className="fab-add" onClick={() => navigate("/add")}>
         <Plus size={24} />
       </button>
