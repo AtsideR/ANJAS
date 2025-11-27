@@ -1,5 +1,5 @@
 // Minimal API helper for Project-Anjas
-const BASE = ''
+const BASE = import.meta.env.VITE_API_URL
 
 async function safeFetch(url, opts = {}) {
   const res = await fetch(url, opts)
