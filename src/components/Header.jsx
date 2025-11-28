@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Home, Truck, Package, User, Plus } from "lucide-react";
 import "./Header.css"; 
-import logo from "../assets/logo.png";
+import logo from "/src/assets/logo.png";  
 
 export default function Header() {
   const navigate = useNavigate();
