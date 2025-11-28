@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import { getSiteInfo } from '../api' 
 import { DataContext } from '../contexts/DataContext'
 import './Dashboard.css' 
-import logo from "/src/assets/logo.png";
+import logo from "../assets/logo.png";
 
 
 export default function Dashboard() {
