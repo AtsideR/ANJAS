@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react'
 import { getSiteInfo } from '../api' 
 import { DataContext } from '../contexts/DataContext'
 import './Dashboard.css' 
+import logo from "../assets/logo.png";
+
 
 export default function Dashboard() {
   const [site, setSite] = useState({ name: 'API Anjas' })
@@ -50,10 +52,16 @@ export default function Dashboard() {
       <div className="card hero-card">
         <div className="hero-content">
             <img 
-              src="https://ppb-mod-5-kel-23.vercel.app/assets/LOGORN-BxI8C0zb.png" 
-              alt="logo" 
-              className="hero-logo" 
+                src={logo}
+                alt="logo"
+                className="hero-logo"
+                style={{
+                    height: "150px",      
+                    width: "auto",
+                    objectFit: "contain"
+                }}
             />
+
             <div className="hero-text">
                 <h1 className="hero-title">{'ANJAS'}</h1>
                 <h3 className="hero-subtitle">Antar Jemput & Jasa Titip</h3>

@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Home, Truck, Package, User, Plus } from "lucide-react";
 import "./Header.css"; 
+import logo from "../assets/logo.png";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -12,19 +13,19 @@ export default function Header() {
       <header className="desktop-header">
         <div className="site-header-inner">
           <div className="brand">
-            {/* PERUBAHAN DISINI: Ukuran logo diperbesar langsung */}
-            {/* Cari bagian <img> di Header.js dan ganti dengan ini */}
+            {/* LOGO BARU MENGGUNAKAN FILE LOCAL */}
             <img
-            src="https://ppb-mod-5-kel-23.vercel.app/assets/LOGORN-BxI8C0zb.png"
-            alt="logo"
-            className="logo"
-            style={{ 
-                height: '75px', 
-                width: 'auto',  
-                minWidth: '0px', /* Mencegah logo mengecil */
-                objectFit: 'contain' 
+              src={logo}
+              alt="logo"
+              className="logo"
+              style={{ 
+                height: '75px',
+                width: 'auto',
+                minWidth: '0px',
+                objectFit: 'contain'
               }}
             />
+
             <div className="brand-text">
               <div className="brand-title">ANJAS</div>
               <div className="muted">Antar Jemput & Jasa Titip</div>
